@@ -127,3 +127,12 @@ def insert_questions():
 # Create each table and insert the questions
 create_table()
 insert_questions()
+
+# Close the connection
+conn.close()
+
+print("Questions and answers have been saved to the DS 4220 table in the database.")
+print("Questions and answers have been saved to the DS 3850 table in the database.")
+print("Questions and answers have been saved to the FIN 3210 table in the database.")
+print("Questions and answers have been saved to the DS 4210 table in the database.")
+print("Questions and answers have been saved to the ECON 4990 table in the database.")
