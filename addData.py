@@ -111,3 +111,19 @@ def insert_questions():
         ('What is the purpose of revenue sharing among teams in a sports league?', 'To reduce competitive balance', 'To ensure all teams have the financial means to compete', 'To lower ticket prices for consumers', 'To increase player salaries', 'To ensure all teams have the financial means to compete'),
         ('What economic concept explains the phenomenon of "winner-takes-all" in sports leagues?', 'Market competition', 'Inequality in revenue distribution', 'Public goods theory', 'Utility maximization', 'Inequality in revenue distribution')
     ]
+
+    c.executemany('''INSERT INTO "DS 4220" (question, option1, option2, option3, option4, answer)
+                     VALUES (?, ?, ?, ?, ?, ?)''', ds4220questions)
+    c.executemany('''INSERT INTO "DS 3850" (question, option1, option2, option3, option4, answer)
+                     VALUES (?, ?, ?, ?, ?, ?)''', ds3850questions)
+    c.executemany('''INSERT OR IGNORE INTO "FIN 3210" (question, option1, option2, option3, option4, answer)
+                     VALUES (?, ?, ?, ?, ?, ?)''', fin3210questions)
+    c.executemany('''INSERT OR IGNORE INTO "DS 4210" (question, option1, option2, option3, option4, answer)
+                     VALUES (?, ?, ?, ?, ?, ?)''', ds4210questions)
+    c.executemany('''INSERT OR IGNORE INTO "ECON 4990" (question, option1, option2, option3, option4, answer)
+                     VALUES (?, ?, ?, ?, ?, ?)''', econ4990questions)
+    conn.commit()
+
+# Create each table and insert the questions
+create_table()
+insert_questions()
