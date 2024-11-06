@@ -1,17 +1,20 @@
 # main.py
+import os
+os.environ['TK_SILENCE_DEPRECATION'] = '1'
+
 import tkinter as tk
 from tkinter import ttk, messagebox
 import sqlite3
 
 # Function to open the quiz window
 def open_quiz_window(category):
-    # Instead of closing the main window, just hide it
-    main_window.withdraw()
+    # Close the main window
+    main_window.destroy()
     
     # Create a new window for the quiz
     quiz_window = tk.Tk()
     quiz_window.title("Quiz Time!")
-    
+
     # Establish connection to the database
     conn = sqlite3.connect("questions.db")
     cursor = conn.cursor()
@@ -74,9 +77,6 @@ def open_quiz_window(category):
 
     # Display the first question
     display_question()
-
-    # Force the quiz window to refresh and update
-    quiz_window.update()
 
 # Create the main window for selecting a category
 main_window = tk.Tk()
