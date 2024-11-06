@@ -17,3 +17,4 @@ Project Structure
 main.py: The main file that runs the GUI and interacts with the database.
 addData.py: The database file where questions and answers are stored.
 quiz.db: The SQLite database containing the quiz questions for each category.
+README.md: Instructions and details about the project.
