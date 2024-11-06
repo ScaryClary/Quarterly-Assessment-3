@@ -1,84 +1,95 @@
+# main.py
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 import sqlite3
+import os
+os.environ['TK_SILENCE_DEPRECATION'] = '1'
 
-# Function to open the quiz window and display questions
+
+# Function to open the quiz window
 def open_quiz_window(category):
-    quiz_window = tk.Toplevel()
-    quiz_window.title(f"{category} Quiz")
+    # Instead of closing the main window, just hide it
+    main_window.withdraw()
     
-    conn = sqlite3.connect('quiz.db')  # Replace with your actual database file path
+    # Create a new window for the quiz
+    quiz_window = tk.Tk()
+    quiz_window.title("Quiz Time!")
+    
+    # Establish connection to the database
+    conn = sqlite3.connect("questions.db")
     cursor = conn.cursor()
     
-    # Fetch questions from the selected category (table)
-    cursor.execute(f"SELECT question, option1, option2, option3, option4, correct_answer FROM '{category}' LIMIT 10")
+    # Fetch questions from the selected category
+    cursor.execute(f"SELECT question, option_a, option_b, option_c, option_d, correct_answer FROM {category}")
     questions = cursor.fetchall()
+    conn.close()
     
-    # Store the current question index
-    current_question_idx = 0
-    score = 0
+    # Initialize current question index
+    current_question = [0]  # Use a mutable object to keep track of the index across function calls
+    
+    # Variable to store the user's selected answer
+    user_answer = tk.StringVar(value="")  # Set to empty string to avoid preselection
 
-    def load_question():
-        nonlocal current_question_idx
-        if current_question_idx < len(questions):
-            # Get the current question and options
-            question, opt1, opt2, opt3, opt4, correct_answer = questions[current_question_idx]
-            
-            # Display the question
-            question_label.config(text=f"Q{current_question_idx + 1}: {question}")
-            
-            # Update the radio button options
-            radio_var.set(None)  # Clear previous selection
-            option1_button.config(text=opt1, value=opt1)
-            option2_button.config(text=opt2, value=opt2)
-            option3_button.config(text=opt3, value=opt3)
-            option4_button.config(text=opt4, value=opt4)
-            
-            # Save the correct answer
-            correct_answer_label.config(text=correct_answer)
+    # Function to display the next question
+    def display_question():
+        if current_question[0] < len(questions):
+            question_text, opt_a, opt_b, opt_c, opt_d, correct_answer = questions[current_question[0]]
+            question_label.config(text=question_text)
+            option_a_rb.config(text=opt_a, value='A')
+            option_b_rb.config(text=opt_b, value='B')
+            option_c_rb.config(text=opt_c, value='C')
+            option_d_rb.config(text=opt_d, value='D')
+            # Clear previous selection
+            user_answer.set("")  # Reset the selection for each new question
         else:
-            # End of quiz, display the score
-            messagebox.showinfo("Quiz Complete", f"You've completed the quiz! Your score: {score}/{len(questions)}")
+            messagebox.showinfo("Quiz Complete", "You've completed the quiz!")
             quiz_window.destroy()
 
+    # Function to check the answer and move to the next question
     def submit_answer():
-        nonlocal current_question_idx, score
-        selected_answer = radio_var.get()  # Get the selected answer
-        correct_answer = correct_answer_label.cget("text")  # Get the correct answer
+        if user_answer.get() == questions[current_question[0]][5]:  # Check against correct_answer
+            messagebox.showinfo("Result", "Correct!")
+        else:
+            messagebox.showinfo("Result", "Incorrect. Try Again.")
         
-        if selected_answer == correct_answer:
-            score += 1  # Increase score if correct
-        
-        current_question_idx += 1  # Move to the next question
-        load_question()  # Load the next question
+        # Move to the next question
+        current_question[0] += 1
+        display_question()
+    
+    # Widgets for displaying questions and options
+    question_label = tk.Label(quiz_window, text="")
+    question_label.pack()
+    
+    # Create radio buttons for options
+    option_a_rb = tk.Radiobutton(quiz_window, variable=user_answer)
+    option_b_rb = tk.Radiobutton(quiz_window, variable=user_answer)
+    option_c_rb = tk.Radiobutton(quiz_window, variable=user_answer)
+    option_d_rb = tk.Radiobutton(quiz_window, variable=user_answer)
+    
+    option_a_rb.pack()
+    option_b_rb.pack()
+    option_c_rb.pack()
+    option_d_rb.pack()
 
-    # UI Setup
-    question_label = tk.Label(quiz_window, text="", wraplength=400, justify="left")
-    question_label.pack(pady=10)
-
-    radio_var = tk.StringVar()
-
-    option1_button = tk.Radiobutton(quiz_window, text="", variable=radio_var, value="")
-    option1_button.pack(anchor="w")
-
-    option2_button = tk.Radiobutton(quiz_window, text="", variable=radio_var, value="")
-    option2_button.pack(anchor="w")
-
-    option3_button = tk.Radiobutton(quiz_window, text="", variable=radio_var, value="")
-    option3_button.pack(anchor="w")
-
-    option4_button = tk.Radiobutton(quiz_window, text="", variable=radio_var, value="")
-    option4_button.pack(anchor="w")
-
+    # Submit button to check answer and move to the next question
     submit_button = tk.Button(quiz_window, text="Submit Answer", command=submit_answer)
-    submit_button.pack(pady=10)
+    submit_button.pack()
 
-    # Hidden label to store the correct answer
-    correct_answer_label = tk.Label(quiz_window, text="", fg="grey")
-    correct_answer_label.pack_forget()  # Hide this label
+    # Display the first question
+    display_question()
 
-    load_question()  # Load the first question
+# Create the main window for selecting a category
+main_window = tk.Tk()
+main_window.title("Select Quiz Category")
 
-    # Close the connection
-    conn.close()
+# Label and dropdown for selecting category
+tk.Label(main_window, text="Choose a category:").pack()
+category = tk.StringVar()
+category_menu = ttk.Combobox(main_window, textvariable=category, values=["DS3850", "DS3860"])
+category_menu.pack()
 
+# Start Quiz Button
+start_button = tk.Button(main_window, text="Start Quiz Now", command=lambda: open_quiz_window(category.get()))
+start_button.pack()
+
+main_window.mainloop()
