@@ -19,7 +19,7 @@ def open_quiz_window(category):
     score = 0
 
     def load_question():
-        nonlocal current_question_idx, score
+        nonlocal current_question_idx
         if current_question_idx < len(questions):
             # Get the current question and options
             question, opt1, opt2, opt3, opt4, correct_answer = questions[current_question_idx]
@@ -43,14 +43,14 @@ def open_quiz_window(category):
 
     def submit_answer():
         nonlocal current_question_idx, score
-        selected_answer = radio_var.get()
-        correct_answer = correct_answer_label.cget("text")
+        selected_answer = radio_var.get()  # Get the selected answer
+        correct_answer = correct_answer_label.cget("text")  # Get the correct answer
         
         if selected_answer == correct_answer:
-            score += 1
+            score += 1  # Increase score if correct
         
-        current_question_idx += 1
-        load_question()
+        current_question_idx += 1  # Move to the next question
+        load_question()  # Load the next question
 
     # UI Setup
     question_label = tk.Label(quiz_window, text="", wraplength=400, justify="left")
