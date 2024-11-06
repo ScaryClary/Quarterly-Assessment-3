@@ -14,7 +14,7 @@ Dynamic question loading from a SQLite database.
 Score calculation and feedback after quiz completion.
 
 Project Structure
-main.py: The main file that runs the GUI and interacts with the database.
-addData.py: The database file where questions and answers are stored.
-quiz.db: The SQLite database containing the quiz questions for each category.
-README.md: Instructions and details about the project.
+1. main.py: The main file that runs the GUI and interacts with the database.
+2. addData.py: The database file where questions and answers are stored.
+3. quiz.db: The SQLite database containing the quiz questions for each category.
+4. README.md: Instructions and details about the project.
