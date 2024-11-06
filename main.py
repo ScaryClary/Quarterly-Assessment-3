@@ -2,9 +2,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import sqlite3
-import os
-os.environ['TK_SILENCE_DEPRECATION'] = '1'
-
 
 # Function to open the quiz window
 def open_quiz_window(category):
@@ -77,6 +74,9 @@ def open_quiz_window(category):
 
     # Display the first question
     display_question()
+
+    # Force the quiz window to refresh and update
+    quiz_window.update()
 
 # Create the main window for selecting a category
 main_window = tk.Tk()
