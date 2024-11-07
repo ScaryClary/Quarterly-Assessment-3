@@ -17,8 +17,19 @@ def open_quiz_window(category):
     cursor = conn.cursor()
     
     try:
+        # Check if category is a valid table name in the database
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        tables = [table[0] for table in cursor.fetchall()]
+        print("Available tables:", tables)  # Debug print to see available tables
+        if category not in tables:
+            messagebox.showinfo("Error", f"No questions available for category '{category}'.")
+            quiz_window.destroy()
+            return
+
         # Fetch questions from the selected category
-        cursor.execute(f"SELECT question, option_a, option_b, option_c, option_d, correct_answer FROM {category}")
+        query = f"SELECT question, option_a, option_b, option_c, option_d, correct_answer FROM {category}"
+        print("Executing query:", query)  # Debug print to confirm the query
+        cursor.execute(query)
         questions = cursor.fetchall()
         conn.close()
         
