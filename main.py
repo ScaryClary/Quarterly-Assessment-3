@@ -3,6 +3,8 @@ import random
 import tkinter as tk
 from tkinter import messagebox
 
+
+
 # Function to read the classes available in the database
 def get_classes():
     conn = sqlite3.connect('programming_quiz.db')  # Connect to the database
@@ -44,16 +46,28 @@ def start_quiz(class_name, root):
     score = 0
     question_index = 0
 
+    # Create the label for questions dynamically
+    question_label = tk.Label(root, text="Question", font=("Arial", 14), wraplength=400)
+    question_label.pack(pady=20)
+
+    # Create buttons for the options dynamically
+    option_buttons = [tk.Button(root, text=f"Option {i+1}", font=("Arial", 12)) for i in range(4)]
+    for button in option_buttons:
+        button.pack(pady=5)
+
+    # Function to update the question and options
     def next_question():
         nonlocal score, question_index
         if question_index < len(questions):
             row = questions[question_index]
-            question = row[1]
-            options = row[2:6]
-            correct_answer = row[6]
+            question = row[1]  # Question text is in the second column
+            options = row[2:6]  # Options are in columns 2-5
+            correct_answer = row[6]  # Correct answer is in column 6
 
-            # Update question and options on the screen
+            # Update question label with the current question
             question_label.config(text=f"Question {question_index + 1}: {question}")
+
+            # Update the text of option buttons
             for i, option in enumerate(options):
                 option_buttons[i].config(text=option)
 
@@ -109,7 +123,7 @@ def main():
     root = tk.Tk()
     root.title("Programming Quiz")
 
-    root.geometry("400x300")
+    root.geometry("600x400")
     root.resizable(False, False)
 
     # Welcome label
