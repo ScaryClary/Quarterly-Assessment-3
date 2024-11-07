@@ -10,8 +10,9 @@ Five categories available for quizzes:
 3. DS 3850
 4. ECON 4990
 5. FIN 3210
-Dynamic question loading from a SQLite database.
-Score calculation and feedback after quiz completion.
+It will include
+1. Dynamic question loading from a SQLite database.
+2. Score calculation and feedback after quiz completion.
 
 Project Structure
 1. main.py: The main file that runs the GUI and interacts with the database.
