@@ -13,7 +13,7 @@ def open_quiz_window(category):
     quiz_window.title("Quiz Time!")
 
     # Establish connection to the database
-    conn = sqlite3.connect("questions.db")
+    conn = sqlite3.connect("programming_quiz.db")
     cursor = conn.cursor()
     
     # Fetch questions from the selected category
